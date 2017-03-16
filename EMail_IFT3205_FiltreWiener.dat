@@ -1,0 +1,72 @@
+
+----------------------------------
+---- TP no 4 ---------------------
+----------------------------------
+
+Creer un repertoire TP4 et copier les differents progs dans ce repertoire
+  
+Le programme Tp4_IFT3205-2-1  chargera l'image cameraman.pgm dans un tableau 2D,
+et dégradera l'image cameraman.pgm avec un floue uniforme 9*9 puis ajoutera du 
+bruit additif Gaussien blanc de variance sigma=0.5 (cad qu'il repondra à la 
+question 2.1).
+
+Bon Tp,
+Max
+
+ 
+Conseils
+========
+
+* Important : Dans le calcul du dénominateur de filtre de Wiener,
+le sigma^2 (variance du bruit) doit être divisé par (length*width)
+(longueur et largeur de l'image) à cause de la conservation
+de l'énergie dans les deux espaces. En effet la DSP ou l'énergie du 
+bruit Gaussien dans le domaine spectral, et intégré sur toute l'image,
+est sigma^2. La constante de cette densité spectrale (DSP) est donc 
+sigma^{2} divisé par la taille de l'image (longueur x largeur).
+
+* Pour faire h(x,y) (nécessaire pour ensuite faire H(u,nu)),
+n'oubliez pas de créer cette fonction de floue (porte 
+de largeur 9*9 pixels) en utilisant le centre informatique.
+Il faut ensuite normaliser cette fonction pour que la somme
+des pixels de h(x,y) soit égale à (longueur x largeur) de l'image
+(même raison que précédemment).
+
+* Après chaque iteration du filtre de Wiener itératif (après chaque
+image restorée obtenue à chaque itération) faire une fonction ou une 
+procédure  qui mettra à zero toute les pixels de l'image restorée qui 
+sont devenus inférieur à zéro et qui mettra à 255 tous les pixels dont 
+le niveaux de gris est devenu supérieur à 255 (cette contrainte atténue 
+le bruit numérique et de calcul et améliore un peu les résultats).
+
+
+
+-------------
+
+Pour information, j'obtiens les vleurs d'ISNR (par itérations)
+suivantes :
+
+ [0::ISNR = 3.0918]
+ [1::ISNR = 3.6615]
+ [2::ISNR = 3.8487]
+ [3::ISNR = 3.9315]
+ [4::ISNR = 3.9826]
+ [5::ISNR = 4.0142]
+ [6::ISNR = 4.0345]
+ [7::ISNR = 4.0539]
+ [8::ISNR = 4.0725]
+ [9::ISNR = 4.0793]
+ [10::ISNR = 4.0863]
+ [11::ISNR = 4.0934]
+ [12::ISNR = 4.0953]
+ [13::ISNR = 4.0972]
+ [14::ISNR = 4.0996]
+ [15::ISNR = 4.1024]
+ [16::ISNR = 4.1062]
+ [17::ISNR = 4.1114]
+ [18::ISNR = 4.1147]
+ [19::ISNR = 4.1175]
+
+
+
+
