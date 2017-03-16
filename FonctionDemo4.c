@@ -583,8 +583,44 @@ void convolveGAUSS(float** mt_img,float** mt_imgdeg,int lgth,int wdth)
 
 }
 
+/*----------------------------------------------------------*/
+/* Recal                                                    */
+/*----------------------------------------------------------*/
+void Recal(float** mat,int lgth,int wdth)
+{
+ int i,j;
+ float max,min;
 
+ /*Initialisation*/
+ min=mat[0][0];
 
+ /*Recherche du min*/
+  for(i=0;i<lgth;i++) for(j=0;j<wdth;j++)
+    if (mat[i][j]<min) min=mat[i][j];
 
+ /*plus min*/
+   for(i=0;i<lgth;i++) for(j=0;j<wdth;j++)
+    mat[i][j]-=min;
 
+   max=mat[0][0];
+ /*Recherche du max*/
+  for(i=0;i<lgth;i++) for(j=0;j<wdth;j++) 
+    if (mat[i][j]>max) max=mat[i][j];
 
+ /*Recalibre la matrice*/
+ for(i=0;i<lgth;i++) for(j=0;j<wdth;j++)
+   mat[i][j]*=(GREY_LEVEL/max);      
+}
+
+/*----------------------------------------------------------*/
+/* ModSquare                                                */
+/*----------------------------------------------------------*/
+void ModSquare(float** matM,float** matR,float** matI,int lgth,int wdth)
+{
+ int i,j;
+
+ /*Calcul du module*/
+ for(i=0;i<lgth;i++)
+     for(j=0;j<wdth;j++)
+         matM[i][j] = (matR[i][j]*matR[i][j])+(matI[i][j]*matI[i][j]);
+}
