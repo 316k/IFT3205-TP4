@@ -1,6 +1,6 @@
   //------------------------------------------------------
 // Prog    : Tp4_IFT3205                          
-// Auteur  :                                            
+// Auteur  : Nicolas Hurtubise, Guillaume Riou         
 // Date    :                                  
 // version :                                             
 // langage : C                                          
