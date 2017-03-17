@@ -22,7 +22,7 @@
 //------------------------------------------------
 #define NAME_VISUALISER "display "
 #define NAME_IMG_IN  "cameraman"
-#define NAME_IMG_OUT1 "image-TpIFT3205-2-2"
+#define NAME_IMG_OUT1 "image-TpIFT3205-3-1"
 #define NAME_IMG_OUT2 "cameramaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaan_degraded"
 
 #define SQUARE(a) ((a) * (a))
@@ -108,6 +108,7 @@ int main(int argc,char **argv)
 
     float** hr = fmatrix_allocate_2d(length,width);
     float** hi = fmatrix_allocate_2d(length,width);
+    float** zewos = fmatrix_allocate_2d(length, width);
 
     for(i=0; i<length; i++)
         for(j=0; j<width; j++) {
@@ -123,6 +124,7 @@ int main(int argc,char **argv)
 
             hi[i][j] = 0;
             mat_img_i[i][j] = 0;
+            zewos[i][j] = 0;
         }
 
     //================//=======//REPTILLIONS==========//=====//==//==//
@@ -140,37 +142,47 @@ int main(int argc,char **argv)
     float** wr = fmatrix_allocate_2d(length, width);
     float** wi = fmatrix_allocate_2d(length, width);
 
-    float isnr;
+    for(k=0; k<nbiter; k++) {
+        float isnr;
     
-    ModSquare(mat_img_m, mat_img, mat_img_i, length, width);
-    ModSquare(hm, hr, hi, length, width);
+        ModSquare(mat_img_m, mat_img, mat_img_i, length, width);
+        ModSquare(hm, hr, hi, length, width);
 
-    for(i=0; i<length; i++)
-        for(j=0; j<width; j++) {
+        SaveImagePgm("AAAAAAAAAAAAAAAAAAAAAA", mat_img, length, width);
+        for(i=0; i<length; i++)
+            for(j=0; j<width; j++) {
             
-            float denom = hm[i][j] + (variance_noise/(length*width)) / mat_img_m[i][j];
+                float denom = hm[i][j] + (variance_noise/(length*width)) / mat_img_m[i][j];
             
-            //================//=======//REPTILLIONS==========//=====//==//==//
+                //================//=======//REPTILLIONS==========//=====//==//==//
             
-            wr[i][j] = hr[i][j] / denom;
-            wi[i][j] = -hi[i][j] / denom;
-        }
+                wr[i][j] = hr[i][j] / denom;
+                wi[i][j] = -hi[i][j] / denom;
+            }
+
+        // Multiplication de l'image dégradée par le filtre W
+        for(i=0; i<length; i++)
+            for(j=0; j<width; j++) {
+                mat_img[i][j] = mat_img_degraded[i][j];
+                mat_img_i[i][j] = 0;
+            }
+        
+        MultMatrix(mat_img, mat_img_i, wr, wi, length, width);
+
+        IFFTDD(mat_img, mat_img_i, length, width);
+        Recal(mat_img, length, width);
+        
+        isnr = 10 * log10(difference_squared(mat_img_orig, mat_img_degraded, length, width) /
+                          difference_squared(mat_img_orig, mat_img, length, width));
+
+        printf("\n\n==========\n%02d - ISNR : %lf\n==========\n", k, isnr);
+
+        FFTDD(mat_img, mat_img_i, length, width);
+        SaveImagePgm("NEUUUUUUU", mat_img, length, width);
+        break;
+    }
     
-    MultMatrix(mat_img, mat_img_i, wr, wi, length, width);
-
     IFFTDD(mat_img, mat_img_i, length, width);
-    
-    for(i=0; i<length; i++)
-        for(j=0; j<width; j++) {
-            mat_img[i][j] = fmax(fmin(mat_img[i][j], 255), 0);
-        }
-
-
-    isnr = 10 * log10(difference_squared(mat_img_orig, mat_img_degraded, length, width) /
-                      difference_squared(mat_img_orig, mat_img, length, width));
-
-    printf("\n\n==========\n%02d - ISNR : %lf\n==========\n", 0, isnr);
-
     
     //REPTILLIONS//===============//=====//====//==//=======//===//==//
     

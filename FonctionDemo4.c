@@ -624,3 +624,18 @@ void ModSquare(float** matM,float** matR,float** matI,int lgth,int wdth)
      for(j=0;j<wdth;j++)
          matM[i][j] = (matR[i][j]*matR[i][j])+(matI[i][j]*matI[i][j]);
 }
+
+void MultMatrix(float** mat1Rin,float** mat1Iin,
+                float** mat2Rin,float** mat2Iin,
+                int lgth,int wdth) {
+    int i,j;
+
+    for(i=0;i<lgth;i++)
+        for(j=0;j<wdth;j++) {
+            float r1 = mat1Rin[i][j], r2 = mat2Rin[i][j],
+                i1 = mat1Iin[i][j], i2 = mat2Iin[i][j];
+       
+            mat1Rin[i][j] = r1 * r2 - i1 * i2;
+            mat1Iin[i][j] = r1 * i2 + r2 * i1;
+        }
+}
